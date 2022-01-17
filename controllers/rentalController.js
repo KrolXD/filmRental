@@ -10,9 +10,7 @@ router.get('', (req,res)=>{
     {
         var custID = new mongoose.mongo.ObjectId(req.session.user_id);
         Rent.find({}).lean().exec((err, docs) => {
-            console.log(custID);
             docs.filter(item => item.customerData.customer_id === custID);
-            console.log(docs);
             res.render('rental/rental',{
                 list: docs
             });
@@ -21,8 +19,6 @@ router.get('', (req,res)=>{
     else if(req.session.userPermission === 2)
     {
         Rent.find({}).lean().exec((err, docs) => {
-            console.log(custID);
-            console.log(docs);
             res.render('rental/rentalAdmin',{
                 list: docs
             });

@@ -35,7 +35,6 @@ router.get('', (req,res)=>{
 //add or edit
 
 router.get('/addEditFilms',(req, res) => {
-    console.log(req.session.test);
     Films.find((err, docs) => {
         if (!err) {
             res.render("films/addEditFilms", {
@@ -186,18 +185,15 @@ router.get('/rent/:id', (req, res) => {
                         rent.customerData.customerId = docCustomer[0].customerId;
                         rent.customerData.name = docCustomer[0].name;
                         rent.customerData.lastName = docCustomer[0].lastName;
-                        console.log(rent);
                         rent.save((err, doc) => {
                             if (!err){
                                 Films.findByIdAndUpdate(docFilm._id, {$set:{
                                     dostepnosc: false}}, {new: true} , (err, doc) => {
                                         if (!err){
                                             var rentalsSum = Number(docCustomer[0].activeRentals) + 1;
-                                            console.log(rentalsSum);
                                             Customers.findOneAndUpdate({user_id: user_id}, {$set:{
                                                 activeRentals: rentalsSum}}, {new: true} , (err, doc) => {
                                                     if (!err){
-                                                        console.log(doc);
                                                         res.redirect('/films');
                                                     }else{
                                                         console.log('Error in film rent :' + err);
@@ -250,7 +246,6 @@ router.post('/serch', (req, res) => {
     {
         Films.find({filmId: req.body.question}).lean().exec((err, docs) => {
             if (!err) {
-                console.log(docs);
                     docs.forEach(setData);
                     res.render('films/films',{
                         list: docs
@@ -265,7 +260,6 @@ router.post('/serch', (req, res) => {
     {
         Films.find({tytul: req.body.question}).lean().exec((err, docs) => {
             if (!err) {
-                console.log(docs);
                     docs.forEach(setData);
                     res.render('films/films',{
                         list: docs
@@ -280,7 +274,6 @@ router.post('/serch', (req, res) => {
     {
         Films.find({gatunek: req.body.question}).lean().exec((err, docs) => {
             if (!err) {
-                console.log(docs);
                     docs.forEach(setData);
                     res.render('films/films',{
                         list: docs

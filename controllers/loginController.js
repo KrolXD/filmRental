@@ -23,8 +23,6 @@ async function insertUser(req, res) {
     try{
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        console.log(await bcrypt.compare(req.body.password, hashedPassword));
-        console.log(hashedPassword);
         var user = new User();
         user.username = req.body.username;
         user.password = hashedPassword;
@@ -37,7 +35,8 @@ async function insertUser(req, res) {
                 insertCustomer(req, res);
             else {
                 var error = err+"";
-                if(error.indexOf("E11000 duplicate key error collection: rental.users index: username_1 dup key") !== -1)
+                console.log(error);
+                if(error.includes("E11000"))
                 {
                     req.body['validationError'] = "This login is taken!";
                     res.render('login/registration', {
@@ -63,7 +62,6 @@ function insertCustomer(req, res)
     customer.phoneNumber = req.body.pNumber;
     User.find({username: req.body.username}).lean().exec(async function(err, docs){
         customer.user_id = docs[0]._id;
-        console.log(customer);
     });
     customer.save((err, doc) => {
         if (!err)
@@ -90,7 +88,6 @@ router.post('', async function(req, res)
                 {
                     req.session.userPermission = 1;
                     req.session.user_id = docs[0]._id.toString();
-                    console.log(req.session.user_id);
                     res.redirect('/films');
                 }
                 else if(docs[0].admin == 1)

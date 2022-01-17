@@ -131,7 +131,6 @@ function setData(obj)
     }
     var fulldate = y+"-"+m+"-"+d;
     obj.dateOfRegistration = fulldate;
-    console.log(obj);
 }
 
 //usuwanie
